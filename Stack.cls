@@ -17,7 +17,6 @@
 */
 public class Stack {
     private DoubleLinkList stack;
-    public Integer size{ get{return stack.size;} }
     
     public Stack(){
         this.stack = new DoubleLinkList();
