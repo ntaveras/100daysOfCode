@@ -17,6 +17,7 @@
 */
 public class Stack {
     private DoubleLinkList stack;
+    public Integer size{ get{return stack.size;} }
     
     public Stack(){
         this.stack = new DoubleLinkList();
@@ -27,11 +28,11 @@ public class Stack {
     }
     
     public Object pop(){
-        return stack.deleteFirst().data;
+        return stack.deleteFirst().getData();
     }
     
     public Object peek(){
-        return stack.traverseList(0).data;
+        return stack.traverseList(0).getData();
     }
     
     public Integer size(){

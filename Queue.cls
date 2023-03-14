@@ -27,11 +27,11 @@ public class Queue {
     }
     
     public Object dequeue(){
-        return queue.deleteFirst().data;
+        return queue.deleteFirst().getData();
     }
     
     public Object first(){
-        return queue.traverseList(0).data;
+        return queue.traverseList(0).getData();
     }
     
     public Integer size(){

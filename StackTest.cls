@@ -20,8 +20,15 @@ public class StackTest {
     
     @isTest public static void testPoppingEmptyStack(){
         Stack s = new Stack();
-        Integer tmp = (Integer) s.pop();
-        System.assertEquals(tmp, null, 'The "testEmptyStack" test returned '+tmp+' instead of null.');
+        Boolean threException = false;
+        Test.startTest();
+        try{
+            Integer tmp = (Integer) s.pop();
+        }catch(Exception e){
+            threException = true;
+        }
+        
+        System.assert(threException);
     }
     
     @isTest public static void testPoppingValidStack(){
