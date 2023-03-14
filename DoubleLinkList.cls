@@ -23,8 +23,8 @@ public class DoubleLinkList {
     
     public class DoubleLinkListException extends Exception {}
     
-    private final Node head;
-    private final Node tail;
+    private final DoubleLinkedNode head;
+    private final DoubleLinkedNode tail;
     public Integer size{
         private set;
         get;
@@ -32,17 +32,17 @@ public class DoubleLinkList {
     public Boolean isEmpty{get{return size == 0;}}
     
     public DoubleLinkList(){
-        this.head = new Node();
-        this.tail = new Node();
+        this.head = new DoublyLinkedNode();
+        this.tail = new DoublyLinkedNode();
         this.head.setNext(this.tail);
         this.tail.setPrev(this.head);
         this.size = 0;
     }
     
     public void addFirst(Object data){
-        Node newNode = new Node(data);
-        Node priorFirstNode = this.head.next; 
-        newNode.setPrev(priorFirstNode.prev); 
+        DoubleLinkedNode newNode = new DoublyLinkedNode(data);
+        DoubleLinkedNode priorFirstNode = this.head.getNext(); 
+        newNode.setPrev(priorFirstNode.getPrev()); 
         newNode.setNext(priorFirstNode); 
         priorFirstNode.setPrev(newNode); 
         this.head.setNext(newNode);
@@ -50,15 +50,34 @@ public class DoubleLinkList {
     }
     
     public void addLast(Object data){
-        Node newNode = new Node(data);
-        Node priorLastNode = this.tail.prev;
-        newNode.prev = priorLastNode;
-        newNode.next = this.Tail;
-        this.Tail.prev = newNode;
-        priorLastNode.next = newNode;
+        DoubleLinkedNode newNode = new DoublyLinkedNode(data);
+        DoubleLinkedNode priorLastNode = this.tail.getPrev();
+        newNode.setPrev(priorLastNode);
+        newNode.setNext(this.Tail);
+        this.Tail.setPrev(newNode);
+        priorLastNode.setNext(newNode);
         this.size++;
     }
-
+    
+    public DoubleLinkedNode traverseList(Integer index){
+        if(this.isEmpty) throw new DoubleLinkListException('The List is empty.');
+        isValidPosition(index);
+        Integer counter = 0;
+        DoubleLinkedNode currentNode = this.head;
+        do{
+            currentNode = currentNode.getNext();
+        } while(++counter <= index && currentNode.hasNext());
+        if(counter != index)
+        {
+            System.debug(LoggingLevel.INFO,
+                         'The traversList() method did not complete, and is not returning the expected position #' + 
+                         index + ' node but instead is returning the position #' + 
+                         counter +'. This is likely due to the returned node not having a next node value of null.');
+        }
+        System.Debug('Traverse: ' + currentNode.getData() + '[' + counter +']');
+        return currentNode;
+    }
+    
     public void add(Integer index, Object data){
         isValidPosition(index);
         if(index == 0)
@@ -69,54 +88,35 @@ public class DoubleLinkList {
             addLast(data);
         } else 
         {
-            Node newNode = new Node(data);
-            Node targetNode = traverseList(index);
-            newNode.prev = targetNode.prev;
-            newNode.next = targetNode;
-            targetNode.prev.next = newNode;
-            targetNode.prev = newNode;
+            DoubleLinkedNode newNode = new DoublyLinkedNode(data);
+            DoubleLinkedNode targetNode = traverseList(index);
+            newNode.setPrev(targetNode.getPrev());
+            newNode.setNext(targetNode);
+            targetNode.getPrev().setNext(newNode);
+            targetNode.setPrev(newNode);
             this.size++;
         }
     }
     
-    public Node traverseList(Integer index){
-        if(this.isEmpty) throw new DoubleLinkListException('The List is empty.');
-        isValidPosition(index);
-        Integer counter = 0;
-        Node currentNode = this.head;
-        do{
-            currentNode = currentNode.next;
-        } while(++counter <= index && currentNode.hasNext);
-        if(counter != index)
-        {
-            System.debug(LoggingLevel.INFO,
-                         'The traversList() method did not complete, and is not returning the expected position #' + 
-                         index + ' node but instead is returning the position #' + 
-                         counter +'. This is likely due to the returned node not having a next node value of null.');
-        }
-        System.Debug('Traverse: ' + currentNode.data + '[' + counter +']');
-        return currentNode;
+    public DoubleLinkedNode deleteNode(DoubleLinkedNode targetNode){
+        targetNode.getPrev().setNext(targetNode.getNext());
+        targetNode.getNext().setPrev(targetNode.getPrev());
+        this.size--;
+        return targetNode;
     }
     
-    public Node deleteFirst(){
-        return deleteAt(0);
-    }
-    
-    public Node deleteLast(){
-        return deleteAt(this.size-1);
-    }
-
-    public Node deleteAt(Integer targetPosition){
+    public DoubleLinkedNode deleteAt(Integer targetPosition){
         isValidPosition(targetPosition);
-        Node deletedNode = traverseList(targetPosition);
+        DoubleLinkedNode deletedNode = traverseList(targetPosition);
         return deleteNode(deletedNode);
     }
     
-    public Node deleteNode(Node targetNode){
-        targetNode.prev.next = targetNode.next;
-        targetNode.next.prev = targetNode.prev;
-        this.size--;
-        return targetNode;
+    public DoubleLinkedNode deleteFirst(){
+        return deleteAt(0);
+    }
+    
+    public DoubleLinkedNode deleteLast(){
+        return deleteAt(this.size-1);
     }
     
     public List<Object> listData(){
@@ -126,12 +126,12 @@ public class DoubleLinkList {
             System.debug(LoggingLevel.INFO, 'The list if empty. An empty list of Objects is being returned.');            
         } else 
         {
-            Node currentNode = traverseList(0);
-            While(currentNode.hasNext)
+            DoubleLinkedNode currentNode = traverseList(0);
+            While(currentNode.hasNext())
             {
                 System.debug(currentNode);
-                dataList.add(currentNode.data);
-                currentNode = currentNode.next;
+                dataList.add(currentNode.getData());
+                currentNode = currentNode.getNext();
             }                     
         }
         return dataList;        
@@ -142,32 +142,17 @@ public class DoubleLinkList {
         throw new DoubleLinkListException('Index out of bound.');
     }
     
-    public class Node{
+    public class DoublyLinkedNode implements DoubleLinkedNode{
         
-        public Node prev{
-            get{ return this.prev;}
-            private set;
-        }
-        public Node next{
-            get{ return this.next;}
-            private set;
-        }
-        public Object data{
-            get{ return this.data;}
-            private set;
-        }
-        public Boolean hasPrev{
-            get{ return prev != null;}
-        }
-        public Boolean hasNext{
-            get{ return next != null;}
-        }
+        private DoubleLinkedNode prev;
+        private DoubleLinkedNode next;
+        private Object data;
         
-        private Node(){
+        private DoublyLinkedNode(){
             this(null);
         }
         
-        private Node(Object data){
+        private DoublyLinkedNode(Object data){
             this.data = data;
             this.prev = null;
             this.next = null;
@@ -177,12 +162,32 @@ public class DoubleLinkList {
             this.data = data;
         }
         
-        public void setPrev(Node node){
+        public Object getData(){
+            return this.data;
+        }
+        
+        public void setPrev(DoubleLinkedNode node){
             this.prev = node;
         }
         
-        public void setNext(Node node){
+        public DoubleLinkedNode getPrev(){
+            return this.prev;
+        }
+        
+        public void setNext(DoubleLinkedNode node){
             this.next = node;
+        }
+        
+         public DoubleLinkedNode getNext(){
+            return this.next;
+        }
+        
+        public Boolean hasPrev(){
+            return this.prev != null;
+        }
+        
+        public Boolean hasNext(){
+            return next != null;
         }
     }
 }

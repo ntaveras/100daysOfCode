@@ -28,7 +28,7 @@ public class DoubleLinkListTest {
         obj.addFirst('Test Head Data');
         obj.addLast('Test Tail Data');
         obj.add(1, 'Test Middle Data');
-        System.assertEquals('Test Middle Data', obj.traverseList(1).data); 
+        System.assertEquals('Test Middle Data', obj.traverseList(1).getData()); 
     }
     
     @isTest static void addLastEmptyList(){
@@ -75,11 +75,11 @@ public class DoubleLinkListTest {
             obj.addFirst('Value ' + i);
         }
         Test.startTest();
-        DoubleLinkList.Node targetNode = obj.traverseList(1);
-        DoubleLinkList.Node deletedNode = obj.deleteNode(targetNode);
+        DoubleLinkedNode targetNode = obj.traverseList(1);
+        DoubleLinkedNode deletedNode = obj.deleteNode(targetNode);
         Test.stopTest();
         System.assertEquals(2, obj.size);
-        System.assertEquals('Value 1', (String) deletedNode.data);
+        System.assertEquals('Value 1', (String) deletedNode.getData());
     }
     
     @isTest static void testTraverseEmptyList(){
@@ -105,7 +105,7 @@ public class DoubleLinkListTest {
         Test.startTest();
         obj.add(0, 'The secon insert is now the First value in the list.');
         Test.stopTest();
-        system.assertEquals(obj.traverseList(0).data, 'The secon insert is now the First value in the list.');
+        system.assertEquals(obj.traverseList(0).getData(), 'The secon insert is now the First value in the list.');
     }
     
     @isTest static void testDeletingNode(){
@@ -119,20 +119,20 @@ public class DoubleLinkListTest {
         obj.deleteLast(); // Head ->'Value 3'->'Value 2'->'Value 1'-> Tail
         obj.deleteAt(1); // Head ->'Value 3'->'Value 1'-> Tail
         Test.stopTest();
-        system.assertEquals('Value 3', obj.traverseList(0).data); 
+        system.assertEquals('Value 3', obj.traverseList(0).getData()); 
     }
     
     @isTest static void testHasPrevInNodeClass(){
         DoubleLinkList obj = new DoubleLinkList();
         obj.addFirst(0);
         obj.addLast(1);
-       system.assert(obj.traverseList(obj.size-1).hasPrev);
+       system.assert(obj.traverseList(obj.size-1).hasPrev());
     }
     
     @isTest static void testCanModifyNodeData(){
         DoubleLinkList obj = new DoubleLinkList();
         obj.addFirst('A');
         obj.traverseList(0).setData('B');
-        system.assertEquals('B', obj.traverseList(0).data);
+        system.assertEquals('B', obj.traverseList(0).getData());
     }
 }
