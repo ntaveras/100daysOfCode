@@ -10,7 +10,6 @@
 public class HashTable {
     private Integer size;
     private List<DoubleLinkList> bucketArray;
-    private HashTableUtility mapUntil;
     
     public HashTable(){
         this(8);
@@ -22,7 +21,6 @@ public class HashTable {
         for(Integer i = 0; i < capacity; i++){
             this.bucketArray.add(null);
         }
-        this.mapUntil = HashTableUtility.getInstance();
     }
     
     public Integer size(){
@@ -55,7 +53,7 @@ public class HashTable {
         Integer bucketSizePriorToOperation = bucket.size;
         if(!containsKey(key))
         {
-            targetNode = new HashNode(key, data, mapUntil.generateHash(key));
+            targetNode = new HashNode(key, data, generateHash(key));
             bucket.addFirst(targetNode);
         } else{
             targetNode = search(getHeadNode(bucket), key);
@@ -88,7 +86,7 @@ public class HashTable {
                     keys.add(currentNode.getKey());
                     currentNode = (HashNode) currentNode.getNext();
                 }
-                keys.add(mapUntil.getNodeKey(currentNode));
+                keys.add(currentNode.getKey());
             }
         }
         return keys;
@@ -107,7 +105,7 @@ public class HashTable {
                     values.add(currentNode.getData());
                     currentNode = currentNode.getNext();
                 }
-                values.add(mapUntil.getNodeData(currentNode));
+                values.add(currentNode.getData());
             }
         }
         return values;
@@ -133,10 +131,19 @@ public class HashTable {
     }
     
     private DoubleLinkList getBucket(String key){
-        Integer index = Math.mod(mapUntil.generateHash(key), size()+1);
+        Integer index = Math.mod(generateHash(key), size()+1);
         DoubleLinkList bucket = this.bucketArray[index];
         if(bucket == null) bucket = new DoubleLinkList();
         return bucket;
+    }
+    
+    public Integer generateHash(String key){
+        Integer hash = 0;
+        for(Integer i = 0; i < key.length(); i++)
+        {
+            hash = (hash + System.hashCode(key.charAt(i)) * i);
+        }
+        return hash;
     }
     
     // ***** Hash Node Sub-class ***** //
@@ -146,10 +153,6 @@ public class HashTable {
         private DoubleLinkedNode next;
         private final Integer HASHED_KEY;
         private final String KEY;
-        
-        public HashNode(String key, Object data){
-            this(key, data, HashTableUtility.getInstance().generateHash(key));        
-        }
         
         public HashNode(String key, Object data, Integer hashedKey){
             this.key = key;
