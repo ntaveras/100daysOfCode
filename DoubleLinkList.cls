@@ -17,6 +17,7 @@
  * Change History:
  * 
  * - 10/Mar./23 - Created
+ * - 14/Mar./23 - Updated Node class to implement the DoublyLinkedNode interface in order to allow for hash table to use * the Double Line List DS.
  * 
 */
 public class DoubleLinkList {
@@ -32,41 +33,51 @@ public class DoubleLinkList {
     public Boolean isEmpty{get{return size == 0;}}
     
     public DoubleLinkList(){
-        this.head = new DoublyLinkedNode();
-        this.tail = new DoublyLinkedNode();
+        this.head = new DLN();
+        this.tail = new DLN();
         this.head.setNext(this.tail);
         this.tail.setPrev(this.head);
         this.size = 0;
     }
     
     public void addFirst(Object data){
-        DoubleLinkedNode newNode = new DoublyLinkedNode(data);
+        DoubleLinkedNode newNode = new DLN(data);
+        addFirst(newNode);
+    }
+    
+    public void addFirst(DoubleLinkedNode node){
         DoubleLinkedNode priorFirstNode = this.head.getNext(); 
-        newNode.setPrev(priorFirstNode.getPrev()); 
-        newNode.setNext(priorFirstNode); 
-        priorFirstNode.setPrev(newNode); 
-        this.head.setNext(newNode);
+        node.setPrev(priorFirstNode.getPrev()); 
+        node.setNext(priorFirstNode); 
+        priorFirstNode.setPrev(node); 
+        this.head.setNext(node);
         this.size++;
     }
     
     public void addLast(Object data){
-        DoubleLinkedNode newNode = new DoublyLinkedNode(data);
+        DoubleLinkedNode newNode = new DLN(data);
+        addLast(newNode);
+    }
+    
+    public void addLast(DoubleLinkedNode node){
         DoubleLinkedNode priorLastNode = this.tail.getPrev();
-        newNode.setPrev(priorLastNode);
-        newNode.setNext(this.Tail);
-        this.Tail.setPrev(newNode);
-        priorLastNode.setNext(newNode);
+        node.setPrev(priorLastNode);
+        node.setNext(this.Tail);
+        this.Tail.setPrev(node);
+        priorLastNode.setNext(node);
         this.size++;
     }
     
     public DoubleLinkedNode traverseList(Integer index){
         if(this.isEmpty) throw new DoubleLinkListException('The List is empty.');
         isValidPosition(index);
-        Integer counter = 0;
+        Integer counter = -1;
         DoubleLinkedNode currentNode = this.head;
-        do{
+        while(counter < index && currentNode.hasNext())
+        {
             currentNode = currentNode.getNext();
-        } while(++counter <= index && currentNode.hasNext());
+            counter++;
+        }
         if(counter != index)
         {
             System.debug(LoggingLevel.INFO,
@@ -74,7 +85,6 @@ public class DoubleLinkList {
                          index + ' node but instead is returning the position #' + 
                          counter +'. This is likely due to the returned node not having a next node value of null.');
         }
-        System.Debug('Traverse: ' + currentNode.getData() + '[' + counter +']');
         return currentNode;
     }
     
@@ -88,12 +98,31 @@ public class DoubleLinkList {
             addLast(data);
         } else 
         {
-            DoubleLinkedNode newNode = new DoublyLinkedNode(data);
+            DoubleLinkedNode newNode = new DLN(data);
             DoubleLinkedNode targetNode = traverseList(index);
             newNode.setPrev(targetNode.getPrev());
             newNode.setNext(targetNode);
             targetNode.getPrev().setNext(newNode);
             targetNode.setPrev(newNode);
+            this.size++;
+        }
+    }
+    
+    public void add(Integer index, DoubleLinkedNode node){
+        isValidPosition(index);
+        if(index == 0)
+        {
+            addFirst(node);
+        } else if(index == this.size)
+        {
+            addLast(node);
+        } else 
+        {
+            DoubleLinkedNode targetNode = traverseList(index);
+            node.setPrev(targetNode.getPrev());
+            node.setNext(targetNode);
+            targetNode.getPrev().setNext(node);
+            targetNode.setPrev(node);
             this.size++;
         }
     }
@@ -142,17 +171,17 @@ public class DoubleLinkList {
         throw new DoubleLinkListException('Index out of bound.');
     }
     
-    public class DoublyLinkedNode implements DoubleLinkedNode{
+    public class DLN implements DoubleLinkedNode{
         
         private DoubleLinkedNode prev;
         private DoubleLinkedNode next;
         private Object data;
         
-        private DoublyLinkedNode(){
+        private DLN(){
             this(null);
         }
         
-        private DoublyLinkedNode(Object data){
+        private DLN(Object data){
             this.data = data;
             this.prev = null;
             this.next = null;
@@ -187,7 +216,7 @@ public class DoubleLinkList {
         }
         
         public Boolean hasNext(){
-            return next != null;
+            return this.next != null;
         }
     }
 }

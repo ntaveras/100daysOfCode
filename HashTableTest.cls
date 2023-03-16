@@ -41,12 +41,15 @@ public class HashTableTest {
         obj.put('one', 1);
         obj.put('two', 2);
         System.assertEquals(2, obj.get('two'));
+        System.assertEquals(1, obj.get('one'));
     }
     
     @isTest public static void testGetWithMultipleEntryOneSameKey(){
         HashTable obj = new HashTable();
+        Test.startTest();
         obj.put('one', 1);
         obj.put('one', 2);
+        Test.stopTest();
         System.assertEquals(2, obj.get('one'));
     }
     
@@ -58,29 +61,34 @@ public class HashTableTest {
     
     @isTest public static void testContainsKeyOnEmptyMap(){
         HashTable obj = new HashTable();
-        System.assertEquals(false, obj.containsKey('one'));
+        test.startTest();
+        Boolean foundKey = obj.containsKey('one');
+        Test.stopTest();
+        System.assert(!foundKey);
     }
     
     @isTest public static void testContainsKeyOnMap(){
         HashTable obj = new HashTable();
         obj.put('one', null);
-        System.assertEquals(true, obj.containsKey('one'));
+        Test.startTest();
+        Boolean keyFound = obj.containsKey('one');
+        Boolean keyNotFound = obj.containsKey('two');
+        Test.stopTest();
+        System.assert(keyFound);
+        System.assert(!keyNotFound);
     }
     
     @isTest public static void testKeySet(){
-        List<String> testArray = new List<String>();
-        testArray.add('one');
-        testArray.add('two');
-        testArray.add('three');
-        testArray.add('four');
-        
+        List<String> testArray = new List<String>{'one', 'two', 'three', 'four'};
+            
         HashTable obj = new HashTable();
-        obj.put('one', null);
-        obj.put('two', null);
-        obj.put('three', null);
-        obj.put('four', null);
-        
-        System.assertEquals(testArray.size(), obj.keySet().size());
+        for(String key : testArray){
+            obj.put(key, null);
+        }        
+        Test.startTest();
+        List<String> keySet = obj.keySet();
+        Test.stopTest();
+        System.assertEquals(testArray.size(), keySet.size());
     }
     
     @isTest public static void testValues(){
@@ -95,8 +103,11 @@ public class HashTableTest {
         obj.put('two', 2);
         obj.put('three', 3);
         obj.put('four', 4);
+        Test.startTest();
+        List<Object> values = obj.values();
+        Test.stopTest();
         
-        System.assertEquals(testArray.size(), obj.keySet().size());
+        System.assertEquals(testArray.size(), values.size());
     }
     
     @isTest public static void testRemoveOnEmptyMap(){
@@ -110,7 +121,10 @@ public class HashTableTest {
         obj.put('two', 2);
         obj.put('three', 3);
         obj.put('four', 4);
-        System.assertEquals(4, obj.remove('four'));
+        Test.startTest();
+        Object data = obj.remove('four');
+        Test.stopTest();
+        System.assertEquals(4, data);
         System.assertEquals(3, obj.size());
     }
 

@@ -2,6 +2,14 @@
 * @Class Name 	: HashTable
 * @Author       : Narayana Taveras
 * @Description  : Implement a Hash Map data structure using A Linked list for Collision management, 
+* Method signatures:
+* - size() : Integer
+* - isEmpty() : Boolean
+* - containsKey(String) : Boolean
+* - get(String) : Object
+* - remove(String) : Object
+* - keySet() : List<String>
+* - values() : List<Object>
 * @Trigger		: N/A
 * @TestClass    : HashTableTest
 * @ChangeHistory:
@@ -68,9 +76,9 @@ public class HashTable {
         DoubleLinkList bucket = getBucket(key);
         Integer bucketSizePriorToOperation = bucket.size;
         HashNode targetNode = search(getHeadNode(bucket), key);
-        
+        Object data = bucket.deleteNode(targetNode).getData();
         this.size += bucket.size - bucketSizePriorToOperation;
-        return bucket.deleteNode(targetNode).getData();
+        return data;
     }
     
     public List<String> keySet(){
@@ -78,17 +86,16 @@ public class HashTable {
         for(Integer index = 0; index < this.bucketArray.size(); index++)
         {
             DoubleLinkList curBucket = this.bucketArray[index];
-            if(curBucket != null)
+            if(curBucket == null || curBucket.isEmpty) continue;
+            DoubleLinkedNode currentNode = (HashNode) getHeadNode(curBucket); 
+            While(currentNode.hasNext())
             {
-                HashNode currentNode = (HashNode) getHeadNode(curBucket); 
-                While(currentNode.hasNext())
-                {
-                    keys.add(currentNode.getKey());
-                    currentNode = (HashNode) currentNode.getNext();
-                }
-                keys.add(currentNode.getKey());
+                HashNode tmp = (HashNode) currentNode; // <-- How would you manage this?
+                keys.add(tmp.getKey());
+                currentNode =  currentNode.getNext();
             }
         }
+        
         return keys;
     }
     
@@ -97,15 +104,12 @@ public class HashTable {
         for(Integer index = 0; index < this.bucketArray.size(); index++)
         {
             DoubleLinkList curBucket = this.bucketArray[index];
-            if(curBucket != null)
+            if(curBucket == null || curBucket.isEmpty) continue;
+            DoubleLinkedNode currentNode = (HashNode) getHeadNode(curBucket);
+            While(currentNode.hasNext())
             {
-                DoubleLinkedNode currentNode = (HashNode) getHeadNode(curBucket);
-                While(currentNode.hasNext())
-                {
-                    values.add(currentNode.getData());
-                    currentNode = currentNode.getNext();
-                }
                 values.add(currentNode.getData());
+                currentNode = currentNode.getNext();
             }
         }
         return values;
@@ -131,9 +135,9 @@ public class HashTable {
     }
     
     private DoubleLinkList getBucket(String key){
-        Integer index = Math.mod(generateHash(key), size()+1);
+        Integer index = Math.mod(generateHash(key), bucketArray.size());
+        if(this.bucketArray[index] == null) this.bucketArray[index] = new DoubleLinkList();
         DoubleLinkList bucket = this.bucketArray[index];
-        if(bucket == null) bucket = new DoubleLinkList();
         return bucket;
     }
     
@@ -155,7 +159,7 @@ public class HashTable {
         private final String KEY;
         
         public HashNode(String key, Object data, Integer hashedKey){
-            this.key = key;
+            this.KEY = key;
             this.data = data;
             this.HASHED_KEY = hashedKey;        
         }
@@ -185,11 +189,11 @@ public class HashTable {
         }
         
         public Boolean hasPrev(){
-            return getPrev().hasPrev();
+            return prev != null;
         }
         
         public Boolean hasNext(){
-            return getNext().hasNext();
+            return this.next != null;
         }
         
         public String getKey(){
