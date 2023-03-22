@@ -1,17 +1,17 @@
 public interface Tree{
     //If an invalid position is sent as a parameter to any method of a tree, then an IllegalArgumentException is thrown.
     
-    Position root();
+    Position getRoot(); // Get the root node for the tree
     
-    Position parent(Position node);
+    Position getParent(Position node); // Return parent node
     
-    List<Position> child(Position node);
+    List<Position> getChild(Position node); // Return list of child nodes
     
-    Integer numChildren(Position node);
+    Integer numChildren(Position node); // Retu
     
-    Boolean isInternal(Position node);
+    Boolean isEdge(Position node);
     
-    Boolean isExternal(Position node);
+    Boolean isLeaf(Position node); // 
     
     Boolean isRoot(Position node);
     
@@ -19,8 +19,8 @@ public interface Tree{
     
     Boolean isEmpty();
     
-    List<Object> iterator();
+    List<Object> getDataIterator();
     
-    List<Position> positions();
+    List<Position> getTreeNodes();
 
 }
