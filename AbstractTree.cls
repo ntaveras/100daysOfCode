@@ -1,42 +1,48 @@
 public abstract class AbstractTree implements Tree{
-    private Position root;
-    private integer size;
-    
-    AbstractTree(){
-        this.root = null;
-        this.size = 0;
-    }
-    
-    AbstractTree(Position p){
-        this.root = p;
-        this.size = 1;
-    }
+    protected TreeNode root;
+    protected integer size;
     
     // Accessor methods
     
-    public Position getRoot(){
+    public TreeNode getRoot(){
         return this.root;
     }
     
-    public boolean isInternal(Position p){
-        return numChildren(p) > 0;
+    public TreeNode getParent(TreeNode node){
+        return node.getParent();
     }
     
-    public Boolean isExternal(Position p){
-        return numChildren(p) == 0;
+    public List<TreeNode> getChild(TreeNode node){
+        return node.getChildren();
     }
     
-    
-    
-    public Boolean isRoot(Position p){
-        return p == getRoot();
+    public List<TreeNode> getTreeNodes(){ // Returns an iterator for all elements in the tree
+        return null;
     }
-    
+
+    public List<Object> getDataIterator(){ // Returns an iterator for all elements in the tree
+            return null;
+    }
+
+
+    // Helper methods
     public Boolean isEmpty(){
         return size() == 0;
     }
     
-    public Integer depth(Position p){
+    public Boolean isRoot(TreeNode node){
+        return node == getRoot();
+    }
+    
+    public Boolean isInternal(TreeNode node){
+        return node.childrenCount() > 0;
+    }
+    
+    public Boolean isLeaf(TreeNode node){
+        return node.childrenCount() == 0;
+    }
+    
+    public Integer depth(TreeNode p){
         Integer counter = 0;
         while(!isRoot(p))
         {
@@ -45,37 +51,22 @@ public abstract class AbstractTree implements Tree{
         return counter;
     }
     
-    public Integer height(Position p){
-        Integer h=0;
-        for(Position c : getChild(p)){
-            h = Math.max(h, height(c));
+    public Integer height(TreeNode node){
+        Integer treeHight = 0;
+        for(TreeNode child : getChild(node)){
+            treeHight = Math.max(treeHight, height(child));
         }
-        return h;
+        return treeHight;
     }
     
-    public integer numChildren(Position p){
-        return 0;
-    }
-    
-    public List<Position> getChild(Position p){
-        return null;
-        
+    public integer numChildren(TreeNode p){
+        return p.childrenCount();
     }
     
     public integer size(){
         return this.size();
     }
     
-    public position getParent(Position p){
-        return null;
-    }
-    
-    public List<Position> getTreeNodes(){ // Returns an iterator for all elements in the tree
-        return null;
-    }
-
-    public List<Object> getDataIterator(){ // Returns an iterator for all elements in the tree
-            return null;
-        }    
+        
 
 }
