@@ -1,19 +1,17 @@
 public interface Tree{
     //If an invalid position is sent as a parameter to any method of a tree, then an IllegalArgumentException is thrown.
     
-    Position getRoot(); // Get the root node for the tree
+    TreeNode getRoot(); // Get the root node for the tree
     
-    Position getParent(Position node); // Return parent node
+    TreeNode getParent(TreeNode node); // Return parent node
     
-    List<Position> getChild(Position node); // Return list of child nodes
+    List<TreeNode> getChild(TreeNode node); // Return list of child nodes
     
-    Integer numChildren(Position node); // Retu
+    Integer numChildren(TreeNode node); // Retu
     
-    Boolean isEdge(Position node);
+    Boolean isLeaf(TreeNode node); // 
     
-    Boolean isLeaf(Position node); // 
-    
-    Boolean isRoot(Position node);
+    Boolean isRoot(TreeNode node);
     
     Integer size();
     
@@ -21,6 +19,6 @@ public interface Tree{
     
     List<Object> getDataIterator();
     
-    List<Position> getTreeNodes();
+    List<Node> getTreeNodes();
 
 }
