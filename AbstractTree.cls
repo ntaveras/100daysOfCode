@@ -2,8 +2,7 @@ public abstract class AbstractTree implements Tree{
     protected TreeNode root;
     protected integer size;
     
-    // Accessor methods
-    
+    // -- Accessor methods -- //
     public TreeNode getRoot(){
         return this.root;
     }
@@ -23,12 +22,6 @@ public abstract class AbstractTree implements Tree{
     public List<Object> getDataIterator(){ // Returns an iterator for all elements in the tree
             return null;
     }
-
-
-    // Helper methods
-    public Boolean isEmpty(){
-        return size() == 0;
-    }
     
     public Boolean isRoot(TreeNode node){
         return node == getRoot();
@@ -42,7 +35,17 @@ public abstract class AbstractTree implements Tree{
         return node.childrenCount() == 0;
     }
     
-    public Integer depth(TreeNode p){
+    public Boolean isEmpty(){
+        return size() == 0;
+    }
+    
+    public Boolean hasRoot(){
+        return this.root != null;
+    }
+    
+    
+    // -- Helper methods -- //
+        public Integer depth(TreeNode p){
         Integer counter = 0;
         while(!isRoot(p))
         {
@@ -59,14 +62,11 @@ public abstract class AbstractTree implements Tree{
         return treeHight;
     }
     
-    public integer numChildren(TreeNode p){
+    public Integer numChildren(TreeNode p){
         return p.childrenCount();
     }
     
-    public integer size(){
-        return this.size();
+    public Integer size(){
+        return this.size;
     }
-    
-        
-
 }
