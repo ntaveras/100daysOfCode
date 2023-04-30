@@ -30,16 +30,15 @@ public class BinaryTree extends AbstractBinaryTree{
     
     
     // -- Setter methods -- //
-    public BinaryTreeNode addLeft(TreeNode node, Object data){
-        BinaryTreeNode tmp = validateNode(node);
-        if(tmp.hasLeft()) throw new BinaryTreeException('Right node is already assigned for the provided node.');
+    public BinaryTreeNode addLeft(BinaryTreeNode node, Object data){
+        if(hasLeft(node)) throw new BinaryTreeException('Left branch is already assigned for the provided node.');
         BinaryTreeNode newLeftNode = new BinaryTreeNode(data);
-        tmp.setLeft(newLeftNode);
+        node.setLeft(newLeftNode);
         this.size++;
-        return tmp;
+        return node;
     }
     
-    public BinaryTreeNode addRight(TreeNode node, Object data){
+    public BinaryTreeNode addRight(BinaryTreeNode node, Object data){
         BinaryTreeNode tmp = validateNode(node);
         if(tmp.hasRight()) throw new BinaryTreeException('Right node is already assigned for the provided node.');
         BinaryTreeNode newLeftNode = new BinaryTreeNode(data);
@@ -48,14 +47,14 @@ public class BinaryTree extends AbstractBinaryTree{
         return tmp;
     }
     
-    public BinaryTreeNode set(TreeNode node, Object data){
+    public BinaryTreeNode setData(TreeNode node, Object data){
         BinaryTreeNode tmp = validateNode(node);
         tmp.setData(data);
         return tmp;
     }
     
     // Helper methods -- //
-    public List<Object> traverseTree(){
+    public List<Object> depthFirstValues(){
         List<Object> result = new List<Object>();
         if(getRoot() == null) return result;
         Stack stack = new Stack();
@@ -63,9 +62,22 @@ public class BinaryTree extends AbstractBinaryTree{
         while(!stack.isEmpty())
         {
             BinaryTreeNode currentNode = (BinaryTreeNode) stack.pop();
-            if(hasLeft(currentNode)) stack.push(getLeft(currentNode));
             if(hasRight(currentNode)) stack.push(getRight(currentNode));
-            System.debug(currentNode.getData());
+            if(hasLeft(currentNode)) stack.push(getLeft(currentNode));
+        }
+        return result;
+    }
+    
+    public List<Object> bredthFirstValues(){
+        List<Object> result = new List<Object>();
+        Queue queue = new Queue();
+        if(getRoot() == null) return result;
+        queue.enqueue(getRoot());  
+        while(!queue.isEmpty())
+        {
+            BinaryTreeNode currentNode = (BinaryTreeNode) queue.dequeue();
+            queue.enqueue(currentNode.getChildren());
+            result.add(currentNode.getData());
         }
         return result;
     }
