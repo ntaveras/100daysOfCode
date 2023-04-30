@@ -6,9 +6,7 @@ public interface TreeNode extends Node{
     
     void setParent(TreeNode data);
     
-    void setLeft(TreeNode data);
-    
-    void setRigth(TreeNode data);
+    void addChildren(TreeNode node);
     
     Boolean isRoot();
     
