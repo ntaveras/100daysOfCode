@@ -91,10 +91,14 @@ public class BinaryTreeNode implements TreeNode{
     }
     
     public void addChildren(TreeNode node){
-        if(hasLeft() && hasRight()) throw new BinaryTreeNodeException();
         BinaryTreeNode tmp = (BinaryTreeNode) node;
-        if(!hasLeft()) setLeft(tmp);
-        if(!hasRight()) setRigth(tmp);      
+        try{
+            if(!hasLeft()) setLeft(tmp);
+        	if(!hasRight()) setRigth(tmp); 
+        } catch (BinaryTreeNodeException e) {
+            
+            System.debug(e.getMessage());
+        }
     }
     
     public void setLeft(BinaryTreeNode node){

@@ -12,7 +12,6 @@ public abstract class AbstractBinaryTree extends AbstractTree{
     }
     
     public BinaryTreeNode getSibling(BinaryTreeNode node){
-        if(!(node.getParent() instanceOf BinaryTreeNode)) throw new BinaryTreeException();
         BinaryTreeNode parent = (BinaryTreeNode) node.getParent();
         if(parent.getLeft() == node) return (BinaryTreeNode) parent.getRight();
         if(parent.getRight() == node) return (BinaryTreeNode) parent.getLeft();

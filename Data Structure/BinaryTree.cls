@@ -84,6 +84,8 @@ public class BinaryTree extends AbstractBinaryTree{
     
     private BinaryTreeNode validateNode(Node node){
         if(!(node instanceof BinaryTreeNode)) throw new BinaryTreeException('Not valid Node type.');
-        return (BinaryTreeNode) node;
+        BinaryTreeNode tmp = (BinaryTreeNode) node;
+        if(tmp.getParent() == tmp) throw new BinaryTreeException('This no is not part of a Tree.Nod eparent is Node itself');
+        return (BinaryTreeNode) tmp;
     }
 }
