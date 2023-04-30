@@ -1,8 +1,26 @@
+/* Author: Narayana Taveras
+ * Description: 
+ * 	Concreate Binary Tree Node.
+ * 	Method signatures:
+ * 	- getData() : Object
+ *  - getParent() : TreeNode
+ *  - first() : Object
+ *  - size() : Integer
+ *  - isEmpty() : Boolean
+ * Test Class: QueueTest
+ * Trigger Name: BinaryTreeNodeTest
+ * Change History:
+ * 
+ * - 12/Mar./23 - Created
+ * 
+*/
 public class BinaryTreeNode implements TreeNode{
     private Object data;
-    private TreeNode left;
-    private TreeNode right;
-    private TreeNode parent;
+    private BinaryTreeNode left;
+    private BinaryTreeNode right;
+    private BinaryTreeNode parent;
+    
+    public class BinaryTreeNodeException extends Exception{}
     
     public BinaryTreeNode(){
         this(null);
@@ -10,6 +28,9 @@ public class BinaryTreeNode implements TreeNode{
     
     public BinaryTreeNode(Object data){
         this.data = data; 
+        this.left = null;
+        this.right = null;
+        this.parent = null;
     }
     
     // -- Getter methods -- //
@@ -17,23 +38,23 @@ public class BinaryTreeNode implements TreeNode{
         return this.data;
     }
     
-    public TreeNode getParent(){
+    public BinaryTreeNode getParent(){
         return this.parent;
     }
     
-    public List<TreeNode> getChildren(){
-        List<TreeNode> childs = new List<TreeNode>();
-        if(this.left != null) childs.add(this.left);
-        if(this.right != null) childs.add(this.right);
+    public List<BinaryTreeNode> getChildren(){
+        List<BinaryTreeNode> childs = new List<BinaryTreeNode>();
+        if(hasLeft()) childs.add(this.left);
+        if(hasRight()) childs.add(this.right);
         return childs;
     }
     
     public BinaryTreeNode getLeft(){
-        return (BinaryTreeNode) this.left;
+        return this.left;
     }
     
     public BinaryTreeNode getRight(){
-        return (BinaryTreeNode) this.right;
+        return this.right;
     }
     
     public Boolean isRoot(){
@@ -50,11 +71,11 @@ public class BinaryTreeNode implements TreeNode{
     }
     
     public Boolean hasLeft(){
-        return !(this.left == null);
+        return (getLeft() != null);
     }
     
     public Boolean hasRight(){
-        return !(this.right == null);
+        return (getRight() != null);
     }
     
     
@@ -64,21 +85,33 @@ public class BinaryTreeNode implements TreeNode{
     }
     
     public void setParent(TreeNode node){
-        this.parent = node;
+        BinaryTreeNode parent = (BinaryTreeNode) node;
+        parent.addChildren(this);
+        this.parent = parent;
     }
     
-    public void setLeft(TreeNode node){
+    public void addChildren(TreeNode node){
+        if(hasLeft() && hasRight()) throw new BinaryTreeNodeException();
+        BinaryTreeNode tmp = (BinaryTreeNode) node;
+        if(!hasLeft()) setLeft(tmp);
+        if(!hasRight()) setRigth(tmp);      
     }
     
-    public void setRigth(TreeNode node){
+    public void setLeft(BinaryTreeNode node){
+        this.left = node;
+        node.setParent(this);
     }
     
+    public void setRigth(BinaryTreeNode node){
+        this.right = node;
+        node.setParent(this);
+    }
     
     // -- Helper methods -- //
     public Integer childrenCount(){
         Integer countOfChilds = 0;
-        if(this.left != null) countOfChilds++;
-        if(this.right != null) countOfChilds++;
+        if(hasLeft()) countOfChilds++;
+        if(hasRight()) countOfChilds++;
         return countOfChilds;
     }
     
